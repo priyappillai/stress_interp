@@ -1,6 +1,5 @@
 import svgwrite
 import pandas as pd
-import numpy as np
 import random
 import math
 
@@ -126,6 +125,27 @@ def draw_catdog(name, param, dimensions):
     dwg.save()
 
 
+def random_dists(filename):
+    """
+    Given a Excel filename with a row for each variable and columns for the 
+    minimum and maximum, create a dictionary of Uniform distributions for 
+    each variable.
+    
+    Parameters
+    ----------
+    filename : string
+        Number of parameter settings to generate
+    
+    Returns
+    -------
+    dictionary (keys = variables, values = Uniform distributions)
+        Random distributions for each variable
+    """
+    df = pd.read_excel(filename,dtype=float,index_col=0)
+    return {var[0]: (var[1]["minimum"], var[1]["maximum"]) \
+            for var in df.iterrows()}
+
+
 def random_params(n, var_dists):
     """
     Given a distribution for each variable, randomly draw n 
@@ -147,7 +167,7 @@ def random_params(n, var_dists):
     for _ in range(n):
         param = {}
         for var in var_dists:
-            param[var] = random.sample(var_dists[var], 1)
+            param[var] = random.uniform(var_dists[var][0], var_dists[var][1])
         params.append(param)
     return pd.DataFrame(params)
 
@@ -167,30 +187,33 @@ def all_params(var_settings):
     DataFrame of parameters
         The parameter settings
     """
-    #TODO
     params = []
-    n = np.prod([len(var) for var in var_settings])
+    n = 1
+    for i in [len(var) for var in var_settings]:
+        n *= i
+
     for i in range(n):
         param = {}
+        mod = 1
+        div = 1
         for var in var_settings:
-            param[var] = random.sample(var_dists[var], 1)
+            mod *= len(var)
+            param[var] = var_settings[var][int((i%mod)/div)]
+            div *= len(var)
         params.append(param)
     return pd.DataFrame(params)
 
-    pass
-
-
-def get_params(filename):
-    return pd.read_excel(filename,dtype=float,index_col=0)
-
 
 if __name__ == "__main__":
-    save_params = False
+    save_params = True
+    #filename = "params.xlsx"
+    #params = pd.read_excel(filename,dtype=float,index_col=0)
+    var_dists = random_dists("ranges.xlsx")
+    params = random_params(10, var_dists)
 
-    params = get_params('params.xlsx')
     dimensions = (800,600)
     for i, param in params.iterrows():
-        name = "catdog_%i.svg" % i
+        name = "images/catdog_%i.svg" % i
         draw_catdog(name, param, dimensions)
     if save_params == True:
         with pd.ExcelWriter("saved_params.xlsx") as writer:
