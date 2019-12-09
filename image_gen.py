@@ -1,28 +1,29 @@
 import svgwrite
 import pandas as pd
+import numpy as np
 import random
 import math
 
 image_folder = "./images/"
-variables = ["fur_pattern", # "plain", "eye_spot", "stripes", "v", "mask", "snout"
-             "fur_lightness",
+variables = ["fur_lightness",
              "fur_saturation",
+             #"fur_pattern", # "plain", "eye_spot", "stripes", "v", "mask", "snout"
              "eye_distance", 
              "eye_height", 
              "eye_aspect_ratio", 
-             "whiskers", # boolean
+             #"whiskers", # boolean
              "whisker_length",
-             "whisker_weight",
+             #"whisker_weight",
              "face_aspect_ratio",
              "nose_size",
+             #"cheek_tufts",
+             #"chin_tufts",
+             #"head_tufts",
              "ear_angle", #up/down
              "ear_tip_angle",
              "ear_point",
              "ear_orientation",
-             "ear_length",
-             "cheek_tufts",
-             "chin_tufts",
-             "head_tufts"]
+             "ear_length"]
 
 
 def style(fill_color=(0,0,0), fill_color_type="rgb", stroke_width=0, stroke_color=(0,0,0), stroke_color_type="rgb"):
@@ -64,8 +65,8 @@ def draw_catdog(name, param, dimensions):
         Variable values for the structure of the face
     """
     dwg = svgwrite.Drawing(filename=name, debug=True)
-    width = param["face_width"]
-    height = 150
+    width = 173*(param["face_aspect_ratio"])**0.5
+    height = 173/(param["face_aspect_ratio"])**0.5
     cx = dimensions[0]/2
     cy = dimensions[1]/2
     #Ears
@@ -74,41 +75,47 @@ def draw_catdog(name, param, dimensions):
     ear_length = param["ear_length"]
     ear_orientation = param["ear_orientation"]
     ear_point = param["ear_point"]
+    eye_height = param["eye_height"]
+    eye_width = eye_height*param["eye_aspect_ratio"]
+    eye_distance = param["eye_distance"]
+    nose_size = param["nose_size"]
+    fur_color = (45,param["fur_saturation"],param["fur_lightness"])
     dist_to_tip = r_ellipse(ear_angle,width,height)+ear_length
     right_tip = dir_point((cx,cy),dist_to_tip,ear_angle)
-    bottom_right = dir_point(right_tip,ear_length*2.5,180+ear_angle+ear_tip_angle*ear_orientation)
-    bottom_right_ctrl = dir_point(bottom_right,ear_length*2.5-ear_point,ear_angle+ear_tip_angle*ear_orientation)
-    top_right = dir_point(right_tip,ear_length*2.5,180+ear_angle-ear_tip_angle*(1-ear_orientation))
-    top_right_ctrl = dir_point(top_right,ear_length*2.5-ear_point,ear_angle-ear_tip_angle*(1-ear_orientation))
+    bottom_right = dir_point(right_tip,ear_length*2.2,180+ear_angle+ear_tip_angle*ear_orientation)
+    bottom_right_ctrl = dir_point(bottom_right,ear_length*2.2-ear_point,ear_angle+ear_tip_angle*ear_orientation)
+    top_right = dir_point(right_tip,ear_length*2.2,180+ear_angle-ear_tip_angle*(1-ear_orientation))
+    top_right_ctrl = dir_point(top_right,ear_length*2.2-ear_point,ear_angle-ear_tip_angle*(1-ear_orientation))
     top_left, top_left_ctrl, left_tip, bottom_left_ctrl, bottom_left = mirror([top_right, top_right_ctrl, right_tip, bottom_right_ctrl, bottom_right],cx)
-    #dwg.add(svgwrite.shapes.Polygon([top_left,left_tip,bottom_left],style=style((45,40,80),"hsl",1)))
-    #dwg.add(svgwrite.shapes.Polygon([top_right,right_tip,bottom_right],style=style((45,40,80),"hsl",1)))
-    left_ear = svgwrite.path.Path(d="M %.2f %.2f" %bottom_left, style=style((45,40,80),"hsl",1))
+    #dwg.add(svgwrite.shapes.Polygon([top_left,left_tip,bottom_left],style=style((45,40,fur_lightness),"hsl",1)))
+    #dwg.add(svgwrite.shapes.Polygon([top_right,right_tip,bottom_right],style=style((45,40,fur_lightness),"hsl",1)))
+    left_ear = svgwrite.path.Path(d="M %.2f %.2f" %bottom_left, style=style(fur_color,"hsl",1))
     left_ear.push("L %.2f %.2f" %bottom_left_ctrl)
-    left_ear.push_arc(top_left_ctrl, 0, (ear_point, ear_point), large_arc = False, absolute = True)
+    left_ear.push_arc(top_left_ctrl, 0, (ear_point*.8, ear_point*.8), large_arc = False, absolute = True)
     left_ear.push("L %.2f %.2f" %top_left)
-    right_ear = svgwrite.path.Path(d="M %.2f %.2f" %bottom_right, style=style((45,40,80),"hsl",1))
+    right_ear = svgwrite.path.Path(d="M %.2f %.2f" %bottom_right, style=style(fur_color,"hsl",1))
     right_ear.push("L %.2f %.2f" %bottom_right_ctrl)
-    right_ear.push_arc(top_right_ctrl, 0, (ear_point, ear_point), large_arc = False, angle_dir = "-", absolute = True)
+    right_ear.push_arc(top_right_ctrl, 0, (ear_point*.8, ear_point*.8), large_arc = False, angle_dir = "-", absolute = True)
     right_ear.push("L %.2f %.2f" %top_right)
     dwg.add(left_ear)
     dwg.add(right_ear)
     #Face
-    dwg.add(dwg.ellipse(center=(cx,cy),r=(width,height),style=style((45,40,80),"hsl",1)))
-    eye_height = param["eye_height"]
-    eye_width = eye_height*param["eye_aspect_ratio"]
-    eye_distance = param["eye_distance"]
+    dwg.add(dwg.ellipse(center=(cx,cy),r=(width,height),style=style(fur_color,"hsl",1)))
     #Eyes
     dwg.add(dwg.ellipse(center=(cx-eye_distance,cy-height/4),r=(eye_width,eye_height),style=style((0,0,0),"hsl",1)))
     dwg.add(dwg.ellipse(center=(cx+eye_distance,cy-height/4),r=(eye_width,eye_height),style=style((0,0,0),"hsl",1)))
-    nose_size = param["nose_size"]
     #Nose
     dwg.add(svgwrite.shapes.Polygon([(cx-nose_size,cy-nose_size/3), (cx+nose_size,cy-nose_size/3), (cx,cy+nose_size)],style=style((0,0,0),"hsl",1)))
     #Snout
-    dwg.add(svgwrite.shapes.Line((cx,cy+nose_size),(cx,cy+nose_size+20),style=style((0,0,0),"hsl",2)))
+    dwg.add(svgwrite.shapes.Line((cx,cy+nose_size),(cx,cy+nose_size*2.5),style=style((0,0,0),"hsl",2)))
+    '''
     mouth = svgwrite.path.Path(d=("M %i %i" %(cx-30,cy+nose_size+24)), style=style(fill_color_type = "none",stroke_width=2))
     mouth.push_arc((cx,cy+nose_size+20), 30, (20,14), large_arc=False, angle_dir='-', absolute=True)
     mouth.push_arc((cx+30,cy+nose_size+24), 150, (20,14), large_arc=False, angle_dir='-', absolute=True)
+    '''
+    mouth = svgwrite.path.Path(d=("M %i %i" %(cx-nose_size*2,cy+nose_size*2.5+4)), style=style(fill_color_type = "none",stroke_width=2))
+    mouth.push_arc((cx,cy+nose_size*2.5), 30, (nose_size*2,nose_size*2), large_arc=False, angle_dir='-', absolute=True)
+    mouth.push_arc((cx+nose_size*2,cy+nose_size*2.5+4), 150, (nose_size*2,nose_size*2), large_arc=False, angle_dir='-', absolute=True)
     dwg.add(mouth)
     #Whiskers
     whisker_length = param["whisker_length"]
@@ -133,11 +140,16 @@ def random_params(n, var_dists):
     
     Returns
     -------
-    list of dictionaries (keys: variables list)
+    DataFrame of parameters
         The parameter settings
     """
-    #TODO
-    pass
+    params = []
+    for _ in range(n):
+        param = {}
+        for var in var_dists:
+            param[var] = random.sample(var_dists[var], 1)
+        params.append(param)
+    return pd.DataFrame(params)
 
 
 def all_params(var_settings):
@@ -152,23 +164,35 @@ def all_params(var_settings):
 
     Returns
     -------
-    list of dictionaries (keys: variables list)
+    DataFrame of parameters
         The parameter settings
     """
     #TODO
+    params = []
+    n = np.prod([len(var) for var in var_settings])
+    for i in range(n):
+        param = {}
+        for var in var_settings:
+            param[var] = random.sample(var_dists[var], 1)
+        params.append(param)
+    return pd.DataFrame(params)
+
     pass
 
 
+def get_params(filename):
+    return pd.read_excel(filename,dtype=float,index_col=0)
+
+
 if __name__ == "__main__":
-    #params = [{"face_width": 200, "face_aspect_ratio": .75, "eye_height": 12,
-    #           "eye_aspect_ratio": 1, "eye_distance": 80, "nose_size": 16, "whisker_length": 60}]
-    params = pd.read_excel('params.xlsx',dtype=float,index_col=0)
+    save_params = False
+
+    params = get_params('params.xlsx')
     dimensions = (800,600)
     for i, param in params.iterrows():
-        print(param)
         name = "catdog_%i.svg" % i
         draw_catdog(name, param, dimensions)
-    #df = pd.DataFrame(params)
-    #with pd.ExcelWriter("params.xlsx") as writer:
-    #    df.to_excel(writer)
+    if save_params == True:
+        with pd.ExcelWriter("saved_params.xlsx") as writer:
+            params.to_excel(writer)
 
