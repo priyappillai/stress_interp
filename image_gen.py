@@ -2,6 +2,9 @@ import svgwrite
 import pandas as pd
 import random
 import math
+from svglib.svglib import svg2rlg
+from reportlab.graphics import renderPDF, renderPM
+
 
 image_folder = "./images/"
 variables = ["fur_lightness",
@@ -208,14 +211,20 @@ if __name__ == "__main__":
     save_params = True
     #filename = "params.xlsx"
     #params = pd.read_excel(filename,dtype=float,index_col=0)
-    var_dists = random_dists("ranges.xlsx")
-    params = random_params(10, var_dists)
+    #var_dists = random_dists("ranges.xlsx")
+    #params = random_params(100, var_dists)
 
-    dimensions = (800,600)
-    for i, param in params.iterrows():
-        name = "images/catdog_%i.svg" % i
-        draw_catdog(name, param, dimensions)
-    if save_params == True:
-        with pd.ExcelWriter("saved_params.xlsx") as writer:
-            params.to_excel(writer)
+    #dimensions = (800,600)
+    #for i, param in params.iterrows():
+    #    name = "images/catdog_%i.svg" % i
+    #    draw_catdog(name, param, dimensions)
+    #if save_params == True:
+    #    with pd.ExcelWriter("saved_params.xlsx") as writer:
+    #        params.to_excel(writer)
+    #for i in range(100):
+        #svgname = "images/random1/catdog_%i.svg" i
+        #pngname = "images/random1/png/catdog_%i.png" % i
+        #with as f:
+        #drawing = svg2rlg(svgname)
+        #renderPM.drawToFile(drawing, pngname, fmt="PNG")
 
