@@ -119,14 +119,14 @@ for row in range(23):
 	row_data = []
 	for col in range(1, 14):
 		row_data.append(df.iat[row, col])
-	cat_data.append(row_data)
+	dog_data.append(row_data)
 	#print ("data: ", row_data)
 
 for row in range(25, 50):
 	row_data = []
 	for col in range(1, 14):
 		row_data.append(df.iat[row, col])
-	cat_data.append(row_data)
+	dog_data.append(row_data)
 	#print ("data: ", row_data)
 
 for row in range(52, 122):
@@ -134,7 +134,7 @@ for row in range(52, 122):
 	for col in range(1, 14):
 		row_data.append(df.iat[row, col])
 	if not (math.isnan(row_data[0])):
-		cat_data.append(row_data)
+		dog_data.append(row_data)
 		#print ("data: ", row_data)
 
 cat_data = np.array(cat_data)
