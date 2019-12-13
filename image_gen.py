@@ -227,13 +227,13 @@ if __name__ == "__main__":
     params = pd.read_excel(filename,dtype=float,index_col=0)
     '''
     var_dists = random_dists("ranges.xlsx")
-    params = random_params(10, var_dists)
+    params = random_params(50, var_dists)
 
     for i, param in params.iterrows():
         name = "images/catdog_%i.svg" % i
         draw_catdog(name, param)
     if save_params == True:
-        with pd.ExcelWriter("saved_params.xlsx") as writer:
+        with pd.ExcelWriter("images/saved_params.xlsx") as writer:
             params.to_excel(writer)
     '''
     for i in range(10):

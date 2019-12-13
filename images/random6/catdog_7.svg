@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="800" height="600" viewBox="0 -600 800 600">
+<defs>
+</defs>
+<g>
+<path fill="hsl(45, 52%, 66%)" stroke="black" stroke-width="1" d="M350.3175104699734,-223.83950403882253 L113.86394735509737,-249.1091002025788 A10.4,10.4,0,0,1,110.3047185332099,-259.50475689753534 L281.6517728907925,-424.3957116615237" />
+<path fill="hsl(45, 52%, 66%)" stroke="black" stroke-width="1" d="M449.6824895300266,-223.83950403882253 L686.1360526449026,-249.1091002025788 A10.4,10.4,0,0,0,689.6952814667901,-259.50475689753534 L518.3482271092075,-424.3957116615237" />
+<path fill="hsl(45, 52%, 66%)" stroke="black" stroke-width="1" d="M209.7,-300.0 A190.3,157.27272727272725,0,0,0,590.3,-300.0 A190.3,157.27272727272725,0,0,0,209.7,-300.0" />
+<path fill="black" stroke="black" stroke-width="1" d="M329.766,-339.3181818181818 A11.234,13.7,0,0,0,352.234,-339.3181818181818 A11.234,13.7,0,0,0,329.766,-339.3181818181818" />
+<path fill="black" stroke="black" stroke-width="1" d="M447.766,-339.3181818181818 A11.234,13.7,0,0,0,470.234,-339.3181818181818 A11.234,13.7,0,0,0,447.766,-339.3181818181818" />
+<path fill="black" stroke="black" stroke-width="1" d="M380.5,-306.5 L419.5,-306.5 L400.0,-280.5 Z" />
+<path fill="black" stroke="black" stroke-width="2" d="M400.0,-280.5 L400.0,-251.25" />
+<path fill="none" stroke="black" stroke-width="2" d="M361.0,-247.25 A39.0,39.0,30,0,0,400.0,-251.25 A39.0,39.0,150,0,0,439.0,-247.25" />
+<path fill="black" stroke="black" stroke-width="1" d="M366.0,-270.5 L345.7155576479296,-265.0648000528471" />
+<path fill="black" stroke="black" stroke-width="1" d="M360.0,-276.5 L339.07991134007335,-274.6697294022992" />
+<path fill="black" stroke="black" stroke-width="1" d="M366.0,-282.5 L345.07991134007335,-284.3302705977008" />
+<path fill="black" stroke="black" stroke-width="1" d="M434.0,-270.5 L454.2844423520704,-265.0648000528471" />
+<path fill="black" stroke="black" stroke-width="1" d="M440.0,-276.5 L460.92008865992665,-274.6697294022992" />
+<path fill="black" stroke="black" stroke-width="1" d="M434.0,-282.5 L454.92008865992665,-284.3302705977008" />
+</g>
+</svg>
